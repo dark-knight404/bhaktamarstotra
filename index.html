@@ -71,7 +71,7 @@
       integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/lyricController.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/dark-knight404/bhaktamarstotra@main/js/lyricController.js"></script>
     <script>
       function ajax(url, returnType) {
         return new Promise(function (resolve, reject) {
@@ -114,7 +114,7 @@
         lyricsController.update(audio.currentTime);
       });
 
-      Promise.all([ajax("/assets/BhaktamarStotra.lrc.txt", "text")]).then(
+      Promise.all([ajax("https://cdn.jsdelivr.net/gh/dark-knight404/bhaktamarstotra@24c2b584653b20a7a7f039af379bf4ea176d7eb9/assets/BhaktamarStotra.lrc.txt", "text")]).then(
         function (res) {
           lyricsController.load(res[0]);
         }

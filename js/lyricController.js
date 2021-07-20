@@ -81,9 +81,9 @@
   }
 
   function textClicked(time) {
-    if ((isFirefox && time == "16.51") || time == "25.17") {
+    // Handle weird Firefox issue for the 2nd & 3rd lines
+    if (isFirefox && ((time == "16.51") || (time == "25.17"))) {
       time = time - 1.5;
-      console.log("Clicked:" + time + " CT:" + track.currentTime);
     }
     track.pause();
     track.currentTime = time;
