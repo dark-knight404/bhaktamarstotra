@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <title>|| Bhaktamar Stotra ||</title>
+  </head>
+  <body class="d-flex flex-column vh-100">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bhaktamar Stotra</a>
+        <!-- TODO: Add support for switching between English and Sanskrit languages -->
+        <!-- <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">English</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Sanskrit</a>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </nav>
+    <div class="d-flex flex-column text-center" id="main">
+      <audio
+        id="track"
+        src="https://cdn.jsdelivr.net/gh/dark-knight404/bhaktamarstotra@fcd43015eb86405a5fb32bb8659cd7e823353b46/assets/BhaktamarStotra64.mp3"
+      >
+        Your browser is not supported!
+      </audio>
+      <button
+        type="button"
+        id="play-pause"
+        class="btn btn-lg mx-auto shadow-none"
+      >
+        <i class="fs-1 bi bi-play-circle"></i>
+      </button>
+      <div
+        class="overflow-auto"
+        id="lyric-outer"
+        style="height: calc(100vh - 9rem)"
+      ></div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/lyricController.js"></script>
+    <script>
+      function ajax(url, returnType) {
+        return new Promise(function (resolve, reject) {
+          let request = new XMLHttpRequest();
+          request.responseType = returnType;
+          request.onreadystatechange = function () {
+            if (request.readyState === XMLHttpRequest.DONE) {
+              if (request.status === 200) {
+                resolve(request.response);
+              } else {
+                reject(Error(request.status));
+                console.error(
+                  "AJAX request to",
+                  url,
+                  "failed. Got status",
+                  request.status
+                );
+              }
+            }
+          };
+          request.onerror = function () {
+            reject(Error("Network Error"));
+            console.warn(
+              "AJAX request to",
+              url,
+              "failed due to network error."
+            );
+          };
+          request.open("GET", url);
+          request.send();
+        });
+      }
+
+      const lyricsController = new lyricCntrlr({
+        el: "#lyric-outer",
+      });
+
+      const audio = document.querySelector("audio");
+      audio.addEventListener("timeupdate", function () {
+        lyricsController.update(audio.currentTime);
+      });
+
+      Promise.all([ajax("/assets/BhaktamarStotra.lrc.txt", "text")]).then(
+        function (res) {
+          lyricsController.load(res[0]);
+        }
+      );
+    </script>
+  </body>
+</html>
